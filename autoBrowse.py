@@ -87,14 +87,3 @@ def getPage(selectedMonth=[]):
     tablePageSource = browser.page_source
     browser.quit()
     return tablePageSource
-
-if __name__ == "__main__":
-    import datetime
-    pageSource = getPage()
-
-    with open("./temp/temp.html", "w") as f:
-        f.write(pageSource)
-
-    with open("./temp/lastMod.txt", "w") as f:
-        e = datetime.datetime.now()
-        f.write(f"{e}")

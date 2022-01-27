@@ -52,10 +52,3 @@ def findSlots(slotcols):
             freeSlotList.append(slotNum)
     return freeSlotList
 # =================================================================
-
-if __name__=="__main__":
-    with open('./temp/temp.html', 'r') as file:
-        allSlots = parsePage(file.read())
-    
-    for x in allSlots:
-        print(f"{x.date} {x.slots}")
