@@ -1,3 +1,3 @@
-from helpers import getTable
+from helpers import getPage
 
-getTable(True)
+getPage()
