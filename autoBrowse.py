@@ -1,5 +1,5 @@
 
-def getPage():
+def getPage(selectedMonth=[]):
     from selenium import webdriver
     from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.support import expected_conditions as EC
@@ -57,17 +57,20 @@ def getPage():
 
     browser.find_element(By.XPATH, "/html/body/table/tbody/tr[3]/td[1]/input").click()
 
-    # TIMING SELECTOR
+    # TIMING SELECTOR======================================================================
     allMonths = browser.find_elements(By.XPATH, '//*[@id="checkMonth"]')
-
+    
+    # Select specific months (if not specified select all)
+    currentMonth = 0
     for month in allMonths:
-        month.click()
+        currentMonth += 1
+        if((currentMonth in selectedMonth) or (len(selectedMonth)==0)):
+            month.click()
 
-    # browser.find_element(By.XPATH, '//*[@id="checkSes"]').click()
-    # browser.find_element(By.XPATH, '//*[@id="checkDay"]').click()
     browser.find_element(By.NAME , 'allSes').click()
     browser.find_element(By.NAME , 'allDay').click()
     browser.find_element(By.NAME , 'btnSearch').click()
+    # ======================================================================================
 
     print("Selected Options")
     try: 
