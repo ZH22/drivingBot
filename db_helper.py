@@ -50,3 +50,32 @@ def update_db(slotsList):
 
     # Return data for new slots
     return(diff_slots_list)
+
+
+# CONFIGURATION FUNCTIONS
+def getConfigJSON():
+    with open("./database/bot_config", "r") as f:
+        data = f.read()
+        return json.loads(data)
+
+def setConfigJSON(newJSON):
+    with open("./database/bot_config", "w") as f:
+        f.write(json.dumps(newJSON, indent=2))
+
+# Toggle bot on and off 
+def toggleStatus():
+    configJSON = getConfigJSON()
+    currentStatus = configJSON.get("status")
+    
+    if(currentStatus == "ON"):
+        currentStatus = "OFF"
+    
+    elif(currentStatus == "OFF"):
+        currentStatus = "ON"
+    
+    configJSON["status"] = currentStatus
+    setConfigJSON(configJSON)
+    return currentStatus
+
+def checkStatus():
+    return getConfigJSON().get("status") == "ON"

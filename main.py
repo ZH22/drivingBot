@@ -2,7 +2,7 @@ from autoBrowse import getPage
 from findSlots import parsePage
 from getMonths import getMonths
 from bot import sendInfo
-from db_helper import update_db
+from db_helper import checkStatus, update_db
 
 from datetime import datetime
 timingDict = {
@@ -17,32 +17,29 @@ timingDict = {
 }
 
 if __name__ == "__main__":
+    # ONLY RUNS IF STATUS IS "ON"
+    if(checkStatus()):
+        SELECTED_DATES = getMonths()
+        
+        pageString = getPage(SELECTED_DATES)
+        
+        slotsList = parsePage(pageString)
 
-    SELECTED_DATES = getMonths()
-    # SELECTED_DATES = [4]
+        # Get lilst of new slots in [MONTH, DATE, DAY, SLOTS]
+        newSlotsList = update_db(slotsList)
 
-    pageString = getPage(SELECTED_DATES)
+        # MESSAGING =====================================================
+        txt = ""
+        for slot in newSlotsList:
+            month, date, day, slots = slot
 
-    # with open("./test.txt", "r") as f:
-    #     pageString = f.read()
+            date_day = datetime.strptime(date, "%d/%m/%Y").day
 
-    slotsList = parsePage(pageString)
+            txt += f"\n{date_day} {month} [ {day} ]:\n"
 
-    # Get lilst of new slots in [MONTH, DATE, DAY, SLOTS]
-    newSlotsList = update_db(slotsList)
-
-    # MESSAGING =====================================================
-    txt = ""
-    for slot in newSlotsList:
-        month, date, day, slots = slot
-
-        date_day = datetime.strptime(date, "%d/%m/%Y").day
-
-        txt += f"\n{date_day} {month} [ {day} ]:\n"
-
-        for x in slots:
-            txt += f"{x}: {timingDict[x]}\n"
-    
-    if(not txt == ""):
-        sendInfo("NEW SLOTS✨" + txt)
-    # ================================================================
+            for x in slots:
+                txt += f"{x}: {timingDict[x]}\n"
+        
+        if(not txt == ""):
+            sendInfo("NEW SLOTS✨" + txt)
+        # ================================================================
