@@ -15,15 +15,9 @@ def getPage(selectedMonth=[]):
     ser = Service("./drivers/chromedriver")
     
     opt = webdriver.ChromeOptions()
-    # if(not showBrowser):
-    #     user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36"
-    #     opt.add_argument('--no-sandbox')
-    #     opt.add_argument('--disable-gpu')
-    #     opt.add_argument("--headless")
-    #     opt.add_argument('--window-size=1920x1080')
-    #     opt.add_argument(f'user-agent={user_agent}')
 
     browser = webdriver.Chrome(service=ser, options=opt)
+    browser.minimize_window()
     browser.get('https://info.bbdc.sg/members-login/')
 
     print("Logging In")
