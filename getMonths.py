@@ -9,6 +9,6 @@ def getMonths():
     weekLaterMonthNum = int(weekLater.strftime("%m"))
 
     if(todayMonthNum == weekLaterMonthNum):
-        return[todayMonthNum]
+        return[1]
     else:
-        return[todayMonthNum, weekLaterMonthNum]
+        return[1, 2]
