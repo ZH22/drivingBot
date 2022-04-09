@@ -18,12 +18,16 @@ def login():
     # try: 
     # Login
 
-    USERNAME = <USERNAME>
-    PASSWORD = <PASSWORD>
+    # USERNAME = <USERNAME>
+    # PASSWORD = <PASSWORD>
 
     # JOEY's
     # USERNAME = <USERNAME>
     # PASSWORD = <PASSWORD>
+
+    # Cheng Xun's
+    USERNAME = <USERNAME>
+    PASSWORD = <PASSWORD>
 
     browser.find_element(By.ID, "txtNRIC").send_keys(USERNAME)
     browser.find_element(By.ID, "txtPassword").send_keys(PASSWORD)

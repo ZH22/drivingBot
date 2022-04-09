@@ -26,7 +26,7 @@ if __name__ == "__main__":
         slotsList = parsePage(pageString)
 
         # Get lilst of new slots in [MONTH, DATE, DAY, SLOTS]
-        newSlotsList = update_db(slotsList)
+        newSlotsList = update_db(slotsList, "prac")
 
         # MESSAGING =====================================================
         txt = ""

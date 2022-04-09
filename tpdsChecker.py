@@ -1,8 +1,9 @@
 from autoBrowse import getTPDS
-from findSlots import parsePage
+from findSlots import parseTPDS
 from getMonths import getMonths
 from bot import sendInfo
 from db_helper import checkModNum, update_db
+from datetime import datetime
 
 if __name__ == "__main__":
     SELECTED_DATES = getMonths()
@@ -11,12 +12,27 @@ if __name__ == "__main__":
     # If there's no limit error
     if(pageString):
         # Parse the pageString and get slotsList
-        print('parsing string')
+        slotsList = parseTPDS(pageString)
 
         # Update DB and get list of new slots
-
+        newSlotsList = update_db(slotsList, "tpds")
 
         # Send New slots
+        txt = ""
+        for slot in newSlotsList:
+            month, date, day, slots = slot
+
+            date_day = datetime.strptime(date, "%d/%m/%Y").day
+
+            txt += f"\n{date_day} {month} [ {day} ]:\n"
+
+            for x in slots:
+                txt += f"{x}: session {x}\n"
+        
+        if(not txt == ""):
+            sendInfo("🚨 TPDS NEW SLOTS 🚨 (testing)" + txt)
 
     else:
         sendInfo("TPDS Limit Hit T^T")
+
+    sendInfo("TPDS checker ran once ---")

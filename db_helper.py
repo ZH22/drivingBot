@@ -4,12 +4,18 @@ from datetime import datetime
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-def update_db(slotsList):
+def update_db(slotsList, mode):
     # List to hold all the newly added slots 
     diff_slots_list = []
 
     # Get Prev Data
-    with open("./database/data", "r") as f:
+    if(mode == 'prac'):
+        dbPath = "./database/data"
+    
+    elif(mode == 'tpds'):
+        dbPath = "./database/tpds_data"
+
+    with open(dbPath, "r") as f:
         prevData = f.read()
         prevJsonObj = json.loads(prevData)
 
@@ -46,7 +52,7 @@ def update_db(slotsList):
 
     # Save new Data
     newJsonObj = json.dumps(jsonObj, indent=2)
-    with open("./database/data", "w") as f:
+    with open(dbPath, "w") as f:
         f.write(newJsonObj)
 
     # Return data for new slots

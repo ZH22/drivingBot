@@ -5,7 +5,7 @@ notHitLimit = True
 count = 0
 
 while(notHitLimit):
-    TPDS_errorCode = getTPDS(checkModNum)
+    TPDS_errorCode = getTPDS(checkModNum())
     if(TPDS_errorCode == 0):
         notHitLimit = False
         print("ENDED")
