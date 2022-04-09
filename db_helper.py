@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-MONTHS = ["Jan", "Feb", "Mar", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 def update_db(slotsList):
     # List to hold all the newly added slots 
