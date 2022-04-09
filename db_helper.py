@@ -1,3 +1,4 @@
+from inspect import currentframe
 import json
 from datetime import datetime
 
@@ -79,3 +80,17 @@ def toggleStatus():
 
 def checkStatus():
     return getConfigJSON().get("status") == "ON"
+
+# TPDS modNUM
+def toggleModNum():
+    configJSON = getConfigJSON()
+    currentModNum = configJSON.get("TPDS_modNum")
+    newModNum = currentModNum + 1
+    if(newModNum > 3):
+        newModNum = 1
+    configJSON["TPDS_modNum"] = newModNum
+    setConfigJSON(configJSON)
+    return newModNum
+
+def checkModNum():
+    return getConfigJSON().get("TPDS_modNum")

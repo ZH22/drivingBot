@@ -1,4 +1,4 @@
-from autoBrowse import getPage
+from autoBrowse import getPracPage
 from findSlots import parsePage
 from getMonths import getMonths
 from bot import sendInfo
@@ -21,7 +21,7 @@ if __name__ == "__main__":
     if(checkStatus()):
         SELECTED_DATES = getMonths()
         
-        pageString = getPage(SELECTED_DATES)
+        pageString = getPracPage(SELECTED_DATES)
         
         slotsList = parsePage(pageString)
 

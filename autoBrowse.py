@@ -1,23 +1,17 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 
-def getPage(selectedMonth=[]):
-    from selenium import webdriver
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.common.by import By
-    from selenium.common.exceptions import TimeoutException
-
-    # CONSTANTS ==============================
-    bookingLink_xpath = "/html/body/table/tbody/tr/td/table/tbody/tr[15]/td[3]/a"
-
-    # ========================================
-
+def login():
     ser = Service("./drivers/chromedriver")
     
     opt = webdriver.ChromeOptions()
 
     browser = webdriver.Chrome(service=ser, options=opt)
-    browser.minimize_window()
+    # browser.minimize_window()
     browser.get('https://info.bbdc.sg/members-login/')
 
     print("Logging In")
@@ -26,6 +20,11 @@ def getPage(selectedMonth=[]):
 
     USERNAME = <USERNAME>
     PASSWORD = <PASSWORD>
+
+    # JOEY's
+    # USERNAME = <USERNAME>
+    # PASSWORD = <PASSWORD>
+
     browser.find_element(By.ID, "txtNRIC").send_keys(USERNAME)
     browser.find_element(By.ID, "txtPassword").send_keys(PASSWORD)
     browser.find_element(By.ID, "loginbtn").click()
@@ -38,6 +37,17 @@ def getPage(selectedMonth=[]):
     )
     
     browser.find_element(By.ID, "proceed-button").click()
+    
+    return browser, wait
+
+def getPracPage(selectedMonth=[]):
+    # CONSTANTS ==============================
+    bookingLink_xpath = "/html/body/table/tbody/tr/td/table/tbody/tr[15]/td[3]/a"
+
+    # ========================================
+
+    # Login
+    browser, wait = login()
 
     # Wait until booking page loads
     wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'leftFrame')))
@@ -74,6 +84,65 @@ def getPage(selectedMonth=[]):
     except TimeoutException:
         print("no alert")
 
+    browser.switch_to.default_content()
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'mainFrame')))
+
+    # Save HTML file for processing
+    tablePageSource = browser.page_source
+    browser.quit()
+    return tablePageSource
+
+# ==============================================================================================
+# For getting to TPDS booking slots ============================================================
+def reachedLimit(browser):
+    from selenium.common.exceptions import NoSuchElementException
+    try:
+        browser.find_element(By.XPATH, '//*[@id="TblSpan"]/table/tbody/tr/td/table/tbody/tr[2]/td')
+    except:
+        return False
+    return True
+
+
+def getTPDS(modNum, selectedMonth=[]):
+    # Booking Link XPATH
+    TPDS_xpath = "/html/body/table/tbody/tr/td/table/tbody/tr[11]/td[3]/a"
+
+    browser, wait = login()
+    # Wait until booking page loads
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'leftFrame')))
+    print("Booking Page Loaded")
+
+    # Click on TDPS link
+    browser.find_element(By.XPATH, TPDS_xpath).click()
+
+    browser.switch_to.default_content()
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'mainFrame')))
+    
+    # STOP IF LIMIT REACHED
+    if(reachedLimit(browser)):
+        print("TPDS Limit Reached")
+        return 0
+
+    
+    # Click on button
+    module_number_xpath = f"/html/body/table/tbody/tr/td[2]/form/table[1]/tbody/tr[3]/td/input[{str(modNum)}]"
+    browser.find_element(By.XPATH, module_number_xpath).click()
+    browser.find_element(By.NAME, 'btnSubmit').click()
+    
+    allMonths = browser.find_elements(By.XPATH, '//*[@id="checkMonth"]')
+    
+    # Select specific months (if not specified select all)
+    currentMonth = 0
+    for month in allMonths:
+        currentMonth += 1
+        if((currentMonth in selectedMonth) or (len(selectedMonth)==0)):
+            month.click()
+
+    browser.find_element(By.NAME , 'allSes').click()
+    browser.find_element(By.NAME , 'allDay').click()
+    browser.find_element(By.NAME , 'btnSearch').click()
+
+    # Switch to mainframe
     browser.switch_to.default_content()
     wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'mainFrame')))
 
