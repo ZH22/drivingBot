@@ -10,16 +10,11 @@ TOKEN = <TELEGRAM_BOT_API_KEY>
 updater = Updater(token=TOKEN, use_context=True)
 dispatcher = updater.dispatcher
 
-chatIDS = {
-    <TELE_CHAT_ID>: <USER>,
-    <TELE_CHAT_ID>: <USER>
-}
-
 def start(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text="DRIVING BOT STARTED")
 
 def sendInfo(message):
-    for currentChat in chatIDS:
+    for currentChat in db_helper.getUsers():
         updater.bot.sendMessage(chat_id=currentChat , text=message)
 
 # CUSTOM COMMANDS =============================================
@@ -30,7 +25,7 @@ def toggleBot(update: Update, context: CallbackContext):
     else:
         currentStatus = f"{currentStatus} 😃"
     
-    currentUser = chatIDS[str(update.effective_chat.id)]
+    currentUser = db_helper.getUserName(str(update.effective_chat.id))
     sendInfo(f"Bot is turned {currentStatus}" + f' by {currentUser}')
     # context.bot.send_message(chat_id=update.effective_chat.id, text=f"Bot is turned {currentStatus}")
 

@@ -1,3 +1,4 @@
+from getpass import getuser
 from inspect import currentframe
 import json
 from datetime import datetime
@@ -100,3 +101,67 @@ def toggleModNum():
 
 def checkModNum():
     return getConfigJSON().get("TPDS_modNum")
+
+# User DB ================================================
+def getUsers():
+    with open("./database/users", "r") as f:
+        data = f.read()
+        return json.loads(data)
+
+# Check if user exists
+def checkUser(teleID):
+    users = getUsers()
+    for user in users:
+        if(user == str(teleID)):
+            return True
+    return False
+
+def setUsers(newJSON):
+    with open("./database/users", "w") as f:
+        f.write(json.dumps(newJSON, indent=2))
+
+def getAccount(teleID):
+    # Run only if user exists
+    if checkUser(teleID):
+        users = getUsers()
+        teleID = str(teleID)
+        username = users[teleID].get("bbdc_username")
+        password = users[teleID].get("password")
+        return [username, password]
+
+def getUserName(teleID):
+    users = getUsers()
+    return users[str(teleID)].get("name")
+
+def getUserTries(teleID):
+    return getUsers()[str(teleID)].get("tries_today")
+
+def getNexUserTele():
+    users = getUsers()
+    tries_list = []
+    teleList = []
+    for user in users:
+        teleList.append(user)
+        tries_list.append(users[user].get("tries_today"))
+    # If all same tries use first user
+    if(all(x == tries_list[0] for x in tries_list) and tries_list[0] < 4):
+        return teleList[0]
+    # If not check for the next in line
+    elif(tries_list[-1] < 4):
+        for i in range(0, len(teleList)-1):
+            if(tries_list[i] > tries_list[i+1]):
+                return teleList[i+1]
+
+def incrementUserTries(teleID):
+    users = getUsers()
+    teleID = str(teleID)
+    user = users[teleID]
+    currentTries = user.get("tries_today")
+    users[teleID]["tries_today"] = currentTries + 1
+    setUsers(users)
+
+def resetUserTries():
+    users = getUsers()
+    for user in users:
+        users[user]["tries_today"] = 0
+    setUsers(users)

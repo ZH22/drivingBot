@@ -5,7 +5,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 
-def login():
+from db_helper import getAccount
+
+def login(teleID):
     ser = Service("./drivers/chromedriver")
     
     opt = webdriver.ChromeOptions()
@@ -15,15 +17,7 @@ def login():
     browser.get('https://info.bbdc.sg/members-login/')
 
     print("Logging In")
-    # try: 
-    # Login
-
-    USERNAME = <USERNAME>
-    PASSWORD = <PASSWORD>
-
-    # JOEY's
-    # USERNAME = <USERNAME>
-    # PASSWORD = <PASSWORD>
+    USERNAME, PASSWORD = getAccount(teleID)
 
     # Cheng Xun's
     # USERNAME = <USERNAME>
@@ -44,14 +38,14 @@ def login():
     
     return browser, wait
 
-def getPracPage(selectedMonth=[]):
+def getPracPage(teleID, selectedMonth=[]):
     # CONSTANTS ==============================
     bookingLink_xpath = "/html/body/table/tbody/tr/td/table/tbody/tr[15]/td[3]/a"
 
     # ========================================
 
     # Login
-    browser, wait = login()
+    browser, wait = login(teleID)
 
     # Wait until booking page loads
     wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'leftFrame')))
@@ -107,11 +101,11 @@ def reachedLimit(browser):
     return True
 
 
-def getTPDS(modNum, selectedMonth=[]):
+def getTPDS(teleID, modNum, selectedMonth=[]):
     # Booking Link XPATH
     TPDS_xpath = "/html/body/table/tbody/tr/td/table/tbody/tr[11]/td[3]/a"
 
-    browser, wait = login()
+    browser, wait = login(teleID)
     # Wait until booking page loads
     wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'leftFrame')))
     print("Booking Page Loaded")

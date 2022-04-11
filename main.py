@@ -21,7 +21,10 @@ if __name__ == "__main__":
     if(checkStatus()):
         SELECTED_DATES = getMonths()
         
-        pageString = getPracPage(SELECTED_DATES)
+        # Temp
+        teleID = <TELE_ID>
+
+        pageString = getPracPage(teleID, SELECTED_DATES)
         
         slotsList = parsePage(pageString)
 
