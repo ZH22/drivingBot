@@ -1,3 +1,4 @@
+from dis import dis
 from re import L
 from telegram.ext import Updater
 from telegram import Update
@@ -27,11 +28,22 @@ def toggleBot(update: Update, context: CallbackContext):
     
     currentUser = db_helper.getUserName(str(update.effective_chat.id))
     sendInfo(f"Bot is turned {currentStatus}" + f' by {currentUser}')
-    # context.bot.send_message(chat_id=update.effective_chat.id, text=f"Bot is turned {currentStatus}")
+
 
 def toggleTPDS(update: Update, context: CallbackContext):
     modNum = db_helper.toggleModNum()
     sendInfo(f"TPDS checker changed to module {str(modNum)}")
+
+
+def toggleFTT(update: Update, context: CallbackContext):
+    currentStatus = db_helper.toggleFTT()
+    if(currentStatus == "OFF"):
+        currentStatus = f"{currentStatus} 💀"
+    else:
+        currentStatus = f"{currentStatus} 😃"
+    
+    currentUser = db_helper.getUserName(str(update.effective_chat.id))
+    sendInfo(f"{currentUser} turned FTT checking {currentStatus}")
 
 # =============================================================
 
@@ -41,9 +53,11 @@ if __name__ == "__main__":
     start_handler = CommandHandler('start', start)
     toggleBot_handler = CommandHandler('toggle', toggleBot)
     tpds_toggle = CommandHandler('tpds', toggleTPDS)
+    ftt_toggle = CommandHandler('ftt', toggleFTT)
 
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(toggleBot_handler)
     dispatcher.add_handler(tpds_toggle)
+    dispatcher.add_handler(ftt_toggle)
 
     updater.start_polling()

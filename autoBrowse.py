@@ -148,3 +148,59 @@ def getTPDS(teleID, modNum, selectedMonth=[]):
     tablePageSource = browser.page_source
     browser.quit()
     return tablePageSource
+
+def getFTT(teleID, selectedMonth=[]):
+    # FTT X-Path
+    FTT_XPATH = "/html/body/table/tbody/tr/td/table/tbody/tr[29]/td[3]/a"
+    ACCEPT_XPATH = "/html/body/table/tbody/tr[7]/td/center/table/tbody/tr[6]/td[1]/input"
+
+    browser, wait = login(teleID)
+    # Wait until booking page loads
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'leftFrame')))
+    print("Booking Page Loaded")
+
+    # Click on FTT link
+    browser.find_element(By.XPATH, FTT_XPATH).click()
+
+    browser.switch_to.default_content()
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'mainFrame')))
+
+    # Click on FTT accept
+    browser.find_element(By.XPATH, ACCEPT_XPATH).click()
+
+
+    FTT_MOD_XPATH = "/html/body/table/tbody/tr/td[2]/form/table/tbody/tr[3]/td/input[2]"
+    browser.find_element(By.XPATH, FTT_MOD_XPATH).click()
+
+    # Click accept
+    browser.find_element(By.NAME, 'btnSubmit').click()
+
+    allMonths = browser.find_elements(By.XPATH, '//*[@id="checkMonth"]')
+    
+    # Select specific months (if not specified select all)
+    currentMonth = 0
+    for month in allMonths:
+        currentMonth += 1
+        if((currentMonth in selectedMonth) or (len(selectedMonth)==0)):
+            month.click()
+
+    browser.find_element(By.NAME , 'allSes').click()
+    browser.find_element(By.NAME , 'allDay').click()
+    browser.find_element(By.NAME , 'btnSearch').click()
+
+    try: 
+        WebDriverWait(browser, 3).until(EC.alert_is_present(), 'Timed out waiting for PA creation ' + 'confirmation popup to appear.')
+        alert_obj = browser.switch_to.alert
+        alert_obj.accept()
+    except TimeoutException:
+        print("no alert")
+
+
+    # Switch to mainframe
+    browser.switch_to.default_content()
+    wait.until(EC.frame_to_be_available_and_switch_to_it((By.NAME,'mainFrame')))
+
+    # Save HTML file for processing
+    tablePageSource = browser.page_source
+    browser.quit()
+    return tablePageSource

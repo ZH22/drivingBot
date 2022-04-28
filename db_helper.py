@@ -16,6 +16,9 @@ def update_db(slotsList, mode):
     elif(mode == 'tpds'):
         dbPath = "./database/tpds_data"
 
+    elif(mode == 'ftt'):
+        dbPath = "./database/ftt_data"
+
     with open(dbPath, "r") as f:
         prevData = f.read()
         prevJsonObj = json.loads(prevData)
@@ -87,6 +90,23 @@ def toggleStatus():
 
 def checkStatus():
     return getConfigJSON().get("status") == "ON"
+
+def toggleFTT():
+    configJSON = getConfigJSON()
+    currentStatus = configJSON.get("FTT")
+    
+    if(currentStatus == "ON"):
+        currentStatus = "OFF"
+    
+    elif(currentStatus == "OFF"):
+        currentStatus = "ON"
+    
+    configJSON["FTT"] = currentStatus
+    setConfigJSON(configJSON)
+    return currentStatus
+
+def checkFTT():
+    return getConfigJSON().get("FTT") == "ON"
 
 # TPDS modNUM
 def toggleModNum():

@@ -34,13 +34,13 @@ if __name__ == "__main__":
                     txt += f"{x}: session {x}\n"
             
             if(not txt == ""):
-                sendInfo("🚨 TPDS NEW SLOTS 🚨 (testing)" + txt)
+                sendInfo("🚨 TPDS NEW SLOTS 🚨" + txt)
 
         else:
-            sendInfo("TPDS Limit Hit T^T")
+            sendInfo(f"{getUserName(teleID)} TPDS Limit Hit T^T")
         
         incrementUserTries(teleID)
-        sendInfo(f"TPDS checker ran using {getUserName(teleID)}'s account\nTries today: {getUserTries(teleID)}\nTESTING ONLY, WILL REMOVE AFT 24HRS")
+        # sendInfo(f"TPDS checker ran using {getUserName(teleID)}'s account\nTries today: {getUserTries(teleID)}\nTESTING ONLY, WILL REMOVE AFT 24HRS")
         
 
         

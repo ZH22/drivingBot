@@ -1,8 +1,8 @@
-from autoBrowse import getPracPage
-from findSlots import parsePage
+from autoBrowse import getPracPage, getFTT
+from findSlots import parsePage, parseFTT
 from getMonths import getMonths
 from bot import sendInfo
-from db_helper import checkStatus, update_db
+from db_helper import checkStatus, update_db, checkFTT
 
 from datetime import datetime
 timingDict = {
@@ -17,13 +17,13 @@ timingDict = {
 }
 
 if __name__ == "__main__":
+    SELECTED_DATES = getMonths()
+        
+    # Temp
+    teleID = <TELE_ID>
+
     # ONLY RUNS IF STATUS IS "ON"
     if(checkStatus()):
-        SELECTED_DATES = getMonths()
-        
-        # Temp
-        teleID = <TELE_ID>
-
         pageString = getPracPage(teleID, SELECTED_DATES)
         
         slotsList = parsePage(pageString)
@@ -44,5 +44,28 @@ if __name__ == "__main__":
                 txt += f"{x}: {timingDict[x]}\n"
         
         if(not txt == ""):
-            sendInfo("NEW SLOTS✨" + txt)
+            sendInfo("NEW PRAC SLOTS✨" + txt)
+        # ================================================================
+
+    if(checkFTT()):
+        # FTT_string = getFTT(teleID, SELECTED_DATES)
+        FTT_string = getFTT(teleID)
+        fttSlotsList = parseFTT(FTT_string)
+        
+        newFTTSlots = update_db(fttSlotsList, "ftt")
+        
+        # MESSAGING =====================================================
+        txt = ""
+        for slot in newFTTSlots:
+            month, date, day, slots = slot
+
+            date_day = datetime.strptime(date, "%d/%m/%Y").day
+
+            txt += f"\n{date_day} {month} [ {day} ]:\n"
+
+            for x in slots:
+                txt += f"{x}: {timingDict[x]}\n"
+        
+        if(not txt == ""):
+            sendInfo("NEW FTT SLOTS 📝 (testing ps)" + txt)
         # ================================================================

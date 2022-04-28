@@ -58,6 +58,32 @@ def parseTPDS(pageString):
         print("no slots found")    
     return allSlots
 
+def parseFTT(pageString):
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(pageString, 'html.parser')
+    allSlots = []
+
+    if (hasSlots(soup)):
+        slotTable = soup.find("form").table.tbody.table
+        table_body = slotTable.find("tbody")
+        rows = table_body.find_all("tr")[2:]
+
+        for row in rows:
+            rowCols = row.find_all("td")
+
+            # Get Date
+            rowDateAndDay = rowCols[0].contents
+            rowDate = rowDateAndDay[0]
+            rowDay = rowDateAndDay[2]
+            
+            slotCols = rowCols[2:]
+            rowFreeSlotsList = findSlots(slotCols)
+
+            allSlots.append(slot(rowDate, rowDay, rowFreeSlotsList))
+    else:
+        print("no slots found")    
+    return allSlots
+
 
 # HELPER FUNCTIONS ===============================================
 def hasSlots(soup):
