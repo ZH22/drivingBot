@@ -1,3 +1,4 @@
+[![status: archive](https://github.com/GIScience/badges/raw/master/status/archive.svg)](https://github.com/GIScience/badges#archive)
 ## Background
 ### Context
 With my neighbourhood Driving Center having notoriously long waiting times, coupled with the average wait times for a lesson slot ballooning from the backlog of students during the Covid Pandemic. Getting a lesson slot required booking weeks in advance, dragging out the driving certification process.
